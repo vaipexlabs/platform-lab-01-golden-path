@@ -112,6 +112,8 @@ Each capability will be delivered as a small, independently verifiable change.
 
 ![Vaipex Golden Path delivery flow](docs/images/vaipex-golden-path-delivery-flow.png)
 
+> A developer submits code, the platform verifies and packages it, Kubernetes runs it, and operational feedback shows whether it is working properly.
+
 ## Success Criteria
 
 The project will be successful when a developer can:
