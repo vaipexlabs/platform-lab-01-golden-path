@@ -94,14 +94,16 @@ Application teams own:
 
 ## Delivery Roadmap
 
-1. Define and document the reference architecture.
-2. Establish the service foundation and supported developer workflow.
-3. Add automated testing and quality validation.
-4. Create a secure production container.
-5. Add a reusable Kubernetes deployment model.
-6. Introduce observability and operational-readiness defaults.
-7. Add continuous-integration guardrails.
-8. Document customization, governance, and adoption guidance.
+![Vaipex Golden Path reference architecture](docs/images/vaipex-golden-path-reference-architecture.png)
+
+- [x] Define and document the reference architecture.
+- [ ] Establish the service foundation and supported developer workflow.
+- [ ] Add automated testing and quality validation.
+- [ ] Create a secure production container.
+- [ ] Add a reusable Kubernetes deployment model.
+- [ ] Introduce observability and operational-readiness defaults.
+- [ ] Add continuous-integration guardrails.
+- [ ] Document customization, governance, and adoption guidance.
 
 Each capability will be delivered as a small, independently verifiable change.
 
