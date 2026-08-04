@@ -92,36 +92,16 @@ Application teams own:
 - Domain-specific alerts and runbooks
 - Operational ownership
 
-## Reference Architecture
-
-```mermaid
-flowchart LR
-    Developer --> PlatformInterface["Golden Path Interface"]
-    PlatformInterface --> Application
-    PlatformInterface --> Tests
-    PlatformInterface --> Container
-    Container --> Deployment
-    Deployment --> Kubernetes
-    Kubernetes --> Health
-    Kubernetes --> Metrics
-    Kubernetes --> Logs
-    CI["Continuous Integration"] --> Tests
-    CI --> Container
-    CI --> Deployment
-```
-
-The concrete developer interface and implementation technologies will be
-selected through documented architectural decisions as the project evolves.
-
 ## Delivery Roadmap
 
-1. Establish the service foundation and supported developer workflow.
-2. Add automated testing and quality validation.
-3. Create a secure production container.
-4. Add a reusable Kubernetes deployment model.
-5. Introduce observability and operational-readiness defaults.
-6. Add continuous-integration guardrails.
-7. Document customization, governance, and adoption guidance.
+1. Define and document the reference architecture.
+2. Establish the service foundation and supported developer workflow.
+3. Add automated testing and quality validation.
+4. Create a secure production container.
+5. Add a reusable Kubernetes deployment model.
+6. Introduce observability and operational-readiness defaults.
+7. Add continuous-integration guardrails.
+8. Document customization, governance, and adoption guidance.
 
 Each capability will be delivered as a small, independently verifiable change.
 
@@ -161,4 +141,3 @@ evolves.
 **Vaipex Labs** develops open reference implementations, engineering patterns,
 and practical tools that help the developer community build reliable, secure,
 and scalable software platforms.
-
