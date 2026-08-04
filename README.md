@@ -94,9 +94,8 @@ Application teams own:
 
 ## Delivery Roadmap
 
-![Vaipex Golden Path reference architecture](docs/images/vaipex-golden-path-reference-architecture.png)
-
-- [x] Define and document the reference architecture.
+- [x] Define and document the golden path delivery flow.
+- [ ] Define and document the reference architecture.
 - [ ] Establish the service foundation and supported developer workflow.
 - [ ] Add automated testing and quality validation.
 - [ ] Create a secure production container.
@@ -106,6 +105,12 @@ Application teams own:
 - [ ] Document customization, governance, and adoption guidance.
 
 Each capability will be delivered as a small, independently verifiable change.
+
+## Delivery
+
+### Golden Path Delivery Flow
+
+![Vaipex Golden Path delivery flow](docs/images/vaipex-golden-path-delivery-flow.png)
 
 ## Success Criteria
 
