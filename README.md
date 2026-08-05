@@ -118,6 +118,13 @@ The intended delivery journey is:
 5. Kubernetes runs the service with secure and observable defaults.
 6. Health, logs, metrics, dashboards, and alerts provide operational feedback.
 
+### Operational Feedback Preview
+
+![Illustrative Golden Path Service Grafana dashboard](docs/images/golden-path-grafana-dashboard.png)
+
+> Illustrative Grafana dashboard view showing service availability, request
+> traffic, error rate, concurrency, latency, and HTTP status metrics.
+
 The repository implements source validation and container building but
 intentionally does not publish an image or deploy from CI. Registry promotion
 and deployment authorization remain organization-specific controls.
