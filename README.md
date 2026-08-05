@@ -1,267 +1,287 @@
 # Vaipex Golden Path
 
-An open-source reference implementation for building secure, observable, and
-production-ready services on Kubernetes.
+An open reference implementation for delivering secure, observable, and
+operable Go services on Kubernetes through a consistent developer experience.
 
 Developed by **Vaipex Labs** for the developer and platform engineering
 community.
 
-## Overview
+[![Validate](https://github.com/vaipexlabs/platform-lab-01-golden-path/actions/workflows/validate.yaml/badge.svg)](https://github.com/vaipexlabs/platform-lab-01-golden-path/actions/workflows/validate.yaml)
+![Go](https://img.shields.io/badge/Go-1.26-00ADD8?logo=go&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-Kustomize-326CE5?logo=kubernetes&logoColor=white)
+![Observability](https://img.shields.io/badge/Observability-Prometheus%20%2B%20Grafana-E6522C)
 
-Engineering teams frequently recreate the same foundational capabilities for
-every service: build automation, container packaging, deployment
-configuration, health checks, observability, security controls, and continuous
-integration.
+## Project at a Glance
 
-Vaipex Golden Path is intended to provide an opinionated, reusable service
-foundation that helps teams adopt consistent engineering standards without
-requiring every developer to become an expert in the underlying platform
-tooling.
+| Area | What the project delivers |
+| --- | --- |
+| Developer experience | A working Go service that can run locally in approximately two minutes |
+| Secure runtime | A minimal non-root container and restricted Kubernetes workload |
+| Deployment | Docker, Kubernetes, Kustomize, and a local [kind](https://kind.sigs.k8s.io/) environment |
+| Observability | Health probes, structured logs, Prometheus metrics, and a Grafana dashboard |
+| Operations | Availability, error-rate, and latency alerts linked to practical runbooks |
+| Quality controls | Automated source, container, Kubernetes, Helm, and PromQL validation |
+| Platform product | Documented contracts, customization points, governance, and adoption guidance |
 
-The project will demonstrate how platform teams can deliver reusable
-capabilities as a product, with a clear developer interface, sensible defaults,
-automated guardrails, and documented extension points.
+## Explore the Project
 
-## Who This Is For
+| I want to… | Start here |
+| --- | --- |
+| See the service working immediately | [Try It in 2 Minutes](#try-it-in-2-minutes) |
+| Understand the technical design | [Reference Architecture](#reference-architecture) |
+| Understand the delivery journey | [How the Golden Path Works](#how-the-golden-path-works) |
+| Develop and test locally | [Local Development](#local-development) |
+| Build the secure image | [Production Container](#production-container) |
+| Deploy it to Kubernetes | [Kubernetes Deployment](#kubernetes-deployment) |
+| Install Prometheus and Grafana | [Observability Stack](#observability-stack) |
+| Inspect metrics, logs, dashboards, and alerts | [Operations](#operations) |
+| Understand automated controls | [Continuous-Integration Guardrails](#continuous-integration-guardrails) |
+| Understand the repository | [Repository Structure](#repository-structure) |
+| Customize or adopt the pattern | [Customization and Adoption](#customization-and-adoption) |
+| Understand ownership | [Responsibility Model](#responsibility-model) |
 
-- Platform engineering teams designing internal developer platforms
-- Application teams deploying services to Kubernetes
-- SRE and DevOps teams standardizing production readiness
-- Engineering leaders evaluating golden paths and paved-road strategies
-- Developers seeking practical cloud-native reference implementations
+## Try It in 2 Minutes
 
-## Project Goals
+With Git and Go 1.26 or newer installed, clone and start the service:
 
-- Reduce the effort required to create a production-ready service
-- Provide consistent build, test, package, and deployment workflows
-- Establish secure and observable defaults
-- Minimize the cognitive load placed on application developers
-- Provide reusable patterns without creating a restrictive golden cage
-- Demonstrate platform-as-a-product principles through working software
-- Encourage community discussion around practical platform engineering
+~~~bash
+git clone https://github.com/vaipexlabs/platform-lab-01-golden-path.git
+cd platform-lab-01-golden-path
+go run ./cmd/golden-path-service
+~~~
 
-## Platform Principles
+The first run may download Go dependencies. Leave the service running and use a
+second terminal to verify it:
 
-### Product-Oriented
+~~~bash
+curl http://localhost:8080/
+curl http://localhost:8080/health/ready
+curl --silent http://localhost:8080/metrics \
+  | grep '^golden_path_http_requests_total'
+~~~
 
-Platform capabilities should be designed around developer needs, supported
-interfaces, documentation, feedback, and measurable outcomes.
+Expected application responses:
 
-### Secure by Default
+~~~json
+{"service":"golden-path-service","status":"running"}
+{"status":"ready"}
+~~~
 
-The supported path should provide secure defaults so application teams do not
-need to discover every control independently.
+You now have a tested service exposing health, request, runtime, and process
+telemetry. Press <code>Ctrl+C</code> in the service terminal when finished.
 
-### Observable by Default
+## What Is a Golden Path?
 
-Health, readiness, metrics, and structured logs should be foundational service
-capabilities rather than optional additions.
+A golden path is a supported approach for delivering a common class of
+software. It combines sensible defaults, reusable components, automated
+guardrails, documentation, and operational feedback so teams do not need to
+recreate the same foundation for every service.
 
-### Opinionated but Extensible
+This project demonstrates how a platform team can provide that experience as a
+product without hiding application ownership or preventing supported
+customization.
 
-The common path should be intentionally standardized. Supported extension
-points should address legitimate workload differences without requiring teams
-to duplicate the platform.
-
-### Automated and Repeatable
-
-Local and continuous-integration workflows should apply the same validations
-to reduce environmental inconsistencies.
-
-## Responsibility Model
-
-### Platform Team
-
-The platform team owns:
-
-- Supported workflows and interfaces
-- Build and deployment standards
-- Secure defaults and automated guardrails
-- Shared observability capabilities
-- Documentation and versioning
-- Platform reliability and developer experience
-
-### Application Team
-
-Application teams own:
-
-- Business functionality
-- Application tests
-- Service-specific resource requirements
-- Service-level objectives
-- Domain-specific alerts and runbooks
-- Operational ownership
-
-## Delivery Roadmap
-
-- [x] Define and document the golden path delivery flow.
-- [x] Define and document the reference architecture.
-- [x] Establish the Go service foundation and HTTP API.
-- [x] Add liveness and readiness endpoints.
-- [x] Add automated endpoint tests.
-- [x] Document the supported local developer workflow.
-- [x] Add automated code-quality validation.
-- [x] Create a secure production container.
-- [x] Add a reusable Kubernetes deployment model.
-- [x] Expose Prometheus-compatible runtime and process metrics.
-- [x] Add low-cardinality application request metrics.
-- [x] Add structured request logs.
-- [x] Add Prometheus monitoring foundation and service discovery.
-- [x] Add a Grafana service dashboard and verify it in the local cluster.
-- [x] Add operational alerts and runbooks.
-- [x] Add continuous-integration guardrails and verify them on GitHub.
-- [x] Document customization, governance, and adoption guidance.
-
-Each capability will be delivered as a small, independently verifiable change.
-
-## Delivery
-
-### Golden Path Delivery Flow
-
-![Vaipex Golden Path delivery flow](docs/images/vaipex-golden-path-delivery-flow.png)
-
-> A developer submits code, the platform verifies and packages it, Kubernetes runs it, and operational feedback shows whether it is working properly.
-
-### Reference Architecture
+## Reference Architecture
 
 ![Vaipex Golden Path reference architecture](docs/images/vaipex-golden-path-reference-architecture.png)
 
-The reference architecture separates the developer and source experience,
-application runtime, monitoring control plane, and operational interfaces.
-Solid arrows represent runtime and data flows; dashed arrows represent
+The implementation separates four concerns:
+
+- **Developer and source experience:** local tools, GitHub, and automated
+  validation.
+- **Application runtime:** Kubernetes Service, Deployment, secure pods, health
+  endpoints, metrics, and JSON logs.
+- **Monitoring control plane:** Prometheus Operator, Prometheus, ServiceMonitor,
+  PrometheusRule, and Grafana.
+- **Operational experience:** the service API, Prometheus UI, Grafana dashboard,
+  alerts, and runbooks.
+
+Solid arrows represent runtime and data flows. Dashed arrows represent
 configuration and discovery relationships.
 
-### Local Development
+## How the Golden Path Works
 
-#### Prerequisites
+![Vaipex Golden Path delivery flow](docs/images/vaipex-golden-path-delivery-flow.png)
+
+The intended delivery journey is:
+
+1. A developer works through a documented service interface.
+2. The golden path supplies supported defaults and reusable components.
+3. Automated controls build, test, and validate the change.
+4. A production container is created for promotion through a registry.
+5. Kubernetes runs the service with secure and observable defaults.
+6. Health, logs, metrics, dashboards, and alerts provide operational feedback.
+
+The repository implements source validation and container building but
+intentionally does not publish an image or deploy from CI. Registry promotion
+and deployment authorization remain organization-specific controls.
+
+## Who This Is For
+
+| Audience | Useful starting points |
+| --- | --- |
+| Application developers | [Two-minute demo](#try-it-in-2-minutes), [local development](#local-development), and [container build](#production-container) |
+| Platform engineers | [Architecture](#reference-architecture), [Kubernetes](#kubernetes-deployment), [observability](#observability-stack), and [CI](#continuous-integration-guardrails) |
+| SRE and operations teams | [Operations](#operations), [alerts](#prometheus-alerts), and [runbooks](docs/runbooks/golden-path-service-alerts.md) |
+| Engineering leaders | [Responsibility model](#responsibility-model), [adoption guidance](#customization-and-adoption), and [scope](#scope-and-non-goals) |
+
+## Local Development
+
+### Prerequisites
 
 - Go 1.26 or newer
 
-#### Run the Service
+### Run the Service
 
-```bash
+~~~bash
 go run ./cmd/golden-path-service
-```
+~~~
 
-The service listens on `http://localhost:8080`.
+The service listens on <code>http://localhost:8080</code>.
 
-#### Verify the Endpoints
+### Verify the Endpoints
 
-```bash
+~~~bash
 curl http://localhost:8080/
 curl http://localhost:8080/health/live
 curl http://localhost:8080/health/ready
-```
-
-#### Inspect Metrics
-
-```bash
 curl http://localhost:8080/metrics
-```
+~~~
 
-The metrics endpoint exposes Prometheus-compatible Go runtime, process, and
-HTTP request measurements. Request metrics use bounded route patterns rather
-than raw URLs to avoid high-cardinality labels.
+| Endpoint | Purpose |
+| --- | --- |
+| <code>GET /</code> | Confirms the application is serving requests |
+| <code>GET /health/live</code> | Indicates whether the process is alive |
+| <code>GET /health/ready</code> | Indicates whether the service is ready for traffic |
+| <code>GET /metrics</code> | Exposes Prometheus-compatible telemetry |
 
-#### Inspect Structured Logs
+Request metrics use bounded route patterns rather than raw URLs to prevent
+high-cardinality labels.
 
-The service writes JSON logs to standard output. Request events include the
-HTTP method, bounded route pattern, response status, and duration. Successful
-health probes and metrics scrapes are omitted to reduce operational noise;
-failed operational requests are still logged.
+### Inspect Structured Logs
 
-#### Run the Tests
+The service writes JSON logs to standard output. Request records include the
+HTTP method, bounded route, response status, and duration. Successful probes
+and metrics scrapes are suppressed to reduce noise; failed operational requests
+are still logged.
 
-```bash
+### Test and Validate
+
+~~~bash
 go test ./...
-```
-
-#### Validate Changes
-
-```bash
 ./scripts/validate.sh
-```
+~~~
 
-The validation command checks Go formatting, runs static analysis, and executes
-the complete test suite.
+The validation script checks formatting, runs static analysis, and executes the
+complete test suite.
 
-Press `Ctrl+C` in the service terminal to stop the application.
+## Production Container
 
-### Container
+### Prerequisites
 
-#### Build the Image
+- Docker
 
-```bash
+### Build
+
+~~~bash
 docker build --tag golden-path-service:local .
-```
+~~~
 
-#### Run the Container
+### Run Securely
 
-```bash
+~~~bash
 docker run --rm \
   --read-only \
   --cap-drop=ALL \
   --security-opt=no-new-privileges \
   --publish 127.0.0.1:8080:8080 \
   golden-path-service:local
-```
+~~~
 
-The runtime image is pinned, minimal, and configured to run as a non-root user.
-The runtime command also uses a read-only filesystem, removes Linux
-capabilities, and prevents the process from gaining additional privileges.
+The multi-stage build produces a pinned, minimal distroless image. The service
+runs as a non-root user with a read-only filesystem, no Linux capabilities, and
+no path for acquiring additional privileges.
 
-Use the endpoint verification commands from the local development workflow to
-confirm the container is running correctly.
+Use the [endpoint verification commands](#verify-the-endpoints) to confirm the
+container is working.
 
-### Kubernetes
+## Kubernetes Deployment
 
-The reusable Kubernetes base is adapted for a local
-[kind](https://kind.sigs.k8s.io/) cluster through a Kustomize overlay.
+### Prerequisites
 
-#### Load the Local Image
+- Docker
+- [kind](https://kind.sigs.k8s.io/)
+- <code>kubectl</code>
 
-```bash
+### Create a Local Cluster
+
+Skip this command if the <code>kind</code> cluster already exists:
+
+~~~bash
+kind create cluster --name kind
+~~~
+
+### Build and Load the Image
+
+~~~bash
+docker build --tag golden-path-service:local .
 kind load docker-image golden-path-service:local --name kind
-```
+~~~
 
-#### Deploy the Service
+### Deploy
 
-```bash
+Use Kustomize through <code>kubectl</code>; do not apply the
+<code>kustomization.yaml</code> file directly:
+
+~~~bash
 kubectl apply -k deploy/kubernetes/overlays/local
-kubectl rollout status deployment/golden-path-service --namespace golden-path
-```
+kubectl rollout status \
+  deployment/golden-path-service \
+  --namespace golden-path
+~~~
 
-#### Inspect the Workload
+### Inspect and Access
 
-```bash
+~~~bash
 kubectl get pods,service --namespace golden-path
-```
+kubectl port-forward \
+  --namespace golden-path \
+  service/golden-path-service \
+  8081:80
+~~~
 
-#### Access the Service
+The service is available at <code>http://localhost:8081</code> while the
+port-forward is running.
 
-```bash
-kubectl port-forward --namespace golden-path service/golden-path-service 8081:80
-```
+### Remove the Local Environment
 
-In another terminal, use the endpoint verification commands with
-`http://localhost:8081`.
+Remove only the deployed application:
 
-### Monitoring Foundation
+~~~bash
+kubectl delete -k deploy/kubernetes/overlays/local
+~~~
 
-The local monitoring foundation uses the pinned `kube-prometheus-stack` Helm
-chart to run Prometheus, the Prometheus Operator, Grafana, kube-state-metrics,
-and node-exporter.
+Or delete the complete local cluster:
 
-#### Add the Chart Repository
+~~~bash
+kind delete cluster --name kind
+~~~
 
-```bash
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+## Observability Stack
+
+### Prerequisites
+
+- A running Kubernetes deployment from the previous section
+- Helm 4
+
+### Install Prometheus and Grafana
+
+~~~bash
+helm repo add \
+  prometheus-community \
+  https://prometheus-community.github.io/helm-charts
 helm repo update prometheus-community
-```
 
-#### Install the Monitoring Stack
-
-```bash
 kubectl apply -f deploy/monitoring/namespace.yaml
 kubectl apply -k deploy/kubernetes/overlays/local
 
@@ -272,156 +292,226 @@ helm upgrade --install monitoring \
   --values deploy/monitoring/kube-prometheus-stack-values.yaml \
   --wait \
   --timeout 5m
-```
+~~~
 
-#### Enable Service Discovery
+The pinned stack installs Prometheus, Prometheus Operator, Grafana,
+kube-state-metrics, and node-exporter with local resource limits.
 
-```bash
+### Install Service Observability
+
+~~~bash
 kubectl apply -f deploy/monitoring/service-monitor.yaml
-```
+kubectl apply -f deploy/monitoring/grafana-dashboard.yaml
+kubectl apply -f deploy/monitoring/prometheus-rules.yaml
+~~~
 
-Prometheus selects ServiceMonitors only from namespaces labeled
-`monitoring.vaipex.io/enabled=true`. The application ServiceMonitor discovers
-both service pods and scrapes `/metrics` every 15 seconds.
+Prometheus discovers monitors and rules only from namespaces explicitly labeled
+<code>monitoring.vaipex.io/enabled=true</code>.
 
-#### Inspect the Monitoring Workloads
+### Verify the Stack
 
-```bash
+~~~bash
 kubectl get pods --namespace monitoring
-kubectl get servicemonitor --all-namespaces
-```
+kubectl get servicemonitor,prometheusrule --all-namespaces
+kubectl get configmap \
+  golden-path-service-dashboard \
+  --namespace monitoring
+~~~
 
-#### Access Prometheus
+## Operations
 
-```bash
+### Prometheus Metrics
+
+Start a port-forward:
+
+~~~bash
 kubectl port-forward \
   --namespace monitoring \
   service/monitoring-kube-prometheus-prometheus \
   9090:9090
-```
+~~~
 
-Open `http://localhost:9090` and query:
+Open <code>http://localhost:9090</code> and try:
 
-```promql
+~~~promql
 up{namespace="golden-path"}
 golden_path_http_requests_total
-```
+golden_path_http_request_duration_seconds_bucket
+golden_path_http_requests_in_flight
+~~~
 
-### Grafana Service Dashboard
+### Grafana Dashboard
 
-The Grafana sidecar discovers dashboard ConfigMaps labeled
-`grafana_dashboard=1`. The version-controlled service dashboard provides views
-of availability, request rate, HTTP 5xx error rate, in-flight requests, p95
-latency, and response status codes.
+Retrieve the generated administrator password:
 
-#### Install the Dashboard
+~~~bash
+kubectl get secret monitoring-grafana \
+  --namespace monitoring \
+  --output jsonpath='{.data.admin-password}' \
+  | base64 --decode
+~~~
 
-After installing or upgrading the monitoring stack with the repository values,
-apply the dashboard ConfigMap:
+Start a new port-forward whenever the Grafana pod is replaced:
 
-```bash
-kubectl apply -f deploy/monitoring/grafana-dashboard.yaml
-```
-
-#### Access Grafana
-
-```bash
+~~~bash
 kubectl port-forward \
   --namespace monitoring \
   service/monitoring-grafana \
   3000:80
-```
+~~~
 
-Retrieve the generated administrator password:
+Open <code>http://localhost:3000</code>, sign in as <code>admin</code>, and
+select **Golden Path Service**. The dashboard presents:
 
-```bash
-kubectl get secret \
-  --namespace monitoring \
-  monitoring-grafana \
-  --output jsonpath='{.data.admin-password}' | base64 --decode
-```
+- Service availability
+- Request rate by route
+- HTTP 5xx error rate
+- Requests in flight
+- p95 request latency by route
+- Request rate by status code
 
-Open `http://localhost:3000`, sign in as `admin`, and select the
-**Golden Path Service** dashboard.
+### Prometheus Alerts
 
-### Operational Alerts and Runbooks
+| Alert | Condition | Severity |
+| --- | --- | --- |
+| <code>GoldenPathServiceTargetDown</code> | One or more targets are unavailable for two minutes | Critical |
+| <code>GoldenPathServiceHighErrorRate</code> | User-facing HTTP 5xx responses exceed 5% for five minutes under meaningful traffic | Warning |
+| <code>GoldenPathServiceHighLatency</code> | User-facing p95 latency exceeds 500 ms for five minutes under meaningful traffic | Warning |
 
-Prometheus evaluates service availability, HTTP 5xx error rate, and p95 latency
-rules from monitoring-enabled namespaces. Each alert links to the
-[Golden Path service alert runbook](docs/runbooks/golden-path-service-alerts.md),
-which documents impact, diagnosis, recovery, verification, and escalation.
+Prometheus evaluates the rules locally. Alertmanager notification routing is
+intentionally outside this reference implementation.
 
-After installing or upgrading the monitoring stack with the repository values,
-apply the alert rules:
+Use the
+[Golden Path service alert runbook](docs/runbooks/golden-path-service-alerts.md)
+for impact, diagnosis, recovery, verification, and escalation guidance.
 
-```bash
-kubectl apply -f deploy/monitoring/prometheus-rules.yaml
-```
+### Application Logs
 
-Inspect the deployed rules:
+~~~bash
+kubectl logs \
+  --namespace golden-path \
+  deployment/golden-path-service \
+  --all-pods \
+  --tail=100
+~~~
 
-```bash
-kubectl get prometheusrule --namespace golden-path
-```
+## Continuous-Integration Guardrails
 
-Open Prometheus and select **Alerts** to inspect each rule's current state.
-Alertmanager delivery and notification routing are intentionally deferred from
-this local foundation.
+The [Validate workflow](.github/workflows/validate.yaml) runs for pull requests
+and pushes to <code>main</code>.
 
-### Continuous Integration Guardrails
+| Job | Controls |
+| --- | --- |
+| Go quality | Formatting, static analysis, and unit tests |
+| Container build | Complete production Dockerfile build |
+| Platform configuration | Kustomize rendering, PromQL validation, Helm linting, and monitoring rendering |
 
-The GitHub Actions validation workflow runs on pull requests and pushes to
-`main`. Independent jobs validate Go source quality, build the production
-container, render Kubernetes configuration, check Prometheus alert syntax, and
-lint and render the pinned monitoring chart.
+The workflow uses:
 
-The workflow has read-only repository permissions, immutable action references,
-explicit tool versions, job timeouts, and concurrency cancellation. It does not
-publish container images, change GitHub resources, or deploy to a cluster.
+- Read-only repository permissions
+- Immutable GitHub Action references
+- Explicit tool and image versions
+- Job timeouts and superseded-run cancellation
+- No publishing credentials or deployment permissions
 
-Run the primary source checks locally before opening a pull request:
+Run the primary source checks locally:
 
-```bash
+~~~bash
 ./scripts/validate.sh
-```
+~~~
 
-### Adoption, Customization, and Governance
+## Repository Structure
 
-The [Golden Path adoption guide](docs/adoption-guide.md) defines the stable
-platform contract, supported customization points, governance expectations,
-and an incremental adoption approach. It also identifies the additional
-capabilities organizations commonly introduce before production use.
+~~~text
+.
+├── .github/workflows/       GitHub Actions guardrails
+├── cmd/                     Service entry point
+├── internal/httpapi/        HTTP routes, metrics, and logging
+├── deploy/
+│   ├── kubernetes/
+│   │   ├── base/            Reusable Kubernetes resources
+│   │   └── overlays/local/  Local kind customization
+│   └── monitoring/          Prometheus, Grafana, and alert resources
+├── docs/
+│   ├── images/              Delivery and architecture illustrations
+│   ├── runbooks/            Operational response procedures
+│   └── adoption-guide.md    Customization and governance guidance
+├── scripts/validate.sh      Local source-quality checks
+├── Dockerfile               Secure multi-stage production image
+├── go.mod
+└── go.sum
+~~~
 
-## Success Criteria
+## Customization and Adoption
 
-The project will be successful when a developer can:
+The [Golden Path adoption guide](docs/adoption-guide.md) defines:
 
-- Clone the repository and understand its purpose quickly
-- Test and run the reference service locally
-- Build a secure container image
-- Deploy the service to a local Kubernetes cluster
-- Observe application health and operational metrics
-- Validate changes through automated controls
-- Customize documented settings without modifying platform internals
+- The stable runtime, Kubernetes, observability, and delivery contracts
+- Supported customization points and their coupled dependencies
+- Platform governance, review, versioning, and exception handling
+- A pilot-based adoption approach and readiness checklist
+- Capabilities organizations commonly add before production use
 
-## Non-Goals
+Prefer environment overlays over copies of the reusable Kubernetes base.
+Coordinate any change to operational endpoints, labels, metric names, or metric
+dimensions across their consumers.
+
+## Responsibility Model
+
+| Platform team owns | Application team owns |
+| --- | --- |
+| Supported workflows and interfaces | Business functionality |
+| Build and deployment standards | Application and domain tests |
+| Secure defaults and automated guardrails | Workload resource requirements |
+| Shared observability capabilities | Service-level objectives |
+| Platform documentation and versioning | Domain-specific telemetry and runbooks |
+| Platform reliability and developer experience | Production operation of the service |
+
+## Project Status
+
+The planned reference implementation is complete and continuously validated.
+
+| Capability | Status |
+| --- | --- |
+| Service foundation, health endpoints, tests, metrics, and structured logs | Available |
+| Secure production container | Available |
+| Reusable Kubernetes base and local overlay | Available |
+| Prometheus and Grafana monitoring foundation | Available |
+| Service dashboard, alerts, and runbooks | Available |
+| Continuous-integration guardrails | Available |
+| Reference architecture and delivery flow | Documented |
+| Customization, governance, and adoption | Documented |
+
+Future work can extend this foundation without changing its core purpose or
+developer-facing contract.
+
+## Scope and Non-Goals
 
 This project is not intended to:
 
 - Replace a complete enterprise internal developer platform
 - Prescribe one technology stack for every workload
-- Eliminate the need for application ownership
+- Eliminate application-team operational ownership
 - Hide operational responsibilities behind automation
 - Demonstrate production-scale multi-cluster operations
+- Publish artifacts or deploy to production environments
 
-It provides a focused reference implementation that teams can evaluate,
-extend, and adapt to their environments.
+Organizations commonly add artifact signing, vulnerability scanning, workload
+identity, external secrets, policy enforcement, environment promotion,
+deployment approvals, centralized logs and traces, Alertmanager routing,
+autoscaling, disruption controls, and recovery procedures.
 
 ## Contributing
 
-Community feedback and contributions are welcome. Contribution guidance,
-development setup, and review expectations will be added as the implementation
-evolves.
+Community feedback and contributions are welcome. Before opening a pull request:
+
+~~~bash
+./scripts/validate.sh
+~~~
+
+Describe the problem being solved, contract or operational impact, validation
+evidence, and documentation changes. Platform changes should preserve secure
+and observable defaults or document a narrowly scoped exception.
 
 ## About Vaipex Labs
 
