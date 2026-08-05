@@ -40,113 +40,6 @@ automated guardrails, and documented extension points.
 - Demonstrate platform-as-a-product principles through working software
 - Encourage community discussion around practical platform engineering
 
-## Local Development
-
-### Prerequisites
-
-- Go 1.26 or newer
-
-### Run the Service
-
-```bash
-go run ./cmd/golden-path-service
-```
-
-The service listens on `http://localhost:8080`.
-
-### Verify the Endpoints
-
-```bash
-curl http://localhost:8080/
-curl http://localhost:8080/health/live
-curl http://localhost:8080/health/ready
-```
-
-### Inspect Metrics
-
-```bash
-curl http://localhost:8080/metrics
-```
-
-The metrics endpoint exposes Prometheus-compatible Go runtime and process
-measurements.
-
-### Run the Tests
-
-```bash
-go test ./...
-```
-
-### Validate Changes
-
-```bash
-./scripts/validate.sh
-```
-
-The validation command checks Go formatting, runs static analysis, and executes
-the complete test suite.
-
-Press `Ctrl+C` in the service terminal to stop the application.
-
-## Container
-
-### Build the Image
-
-```bash
-docker build --tag golden-path-service:local .
-```
-
-### Run the Container
-
-```bash
-docker run --rm \
-  --read-only \
-  --cap-drop=ALL \
-  --security-opt=no-new-privileges \
-  --publish 127.0.0.1:8080:8080 \
-  golden-path-service:local
-```
-
-The runtime image is pinned, minimal, and configured to run as a non-root user.
-The runtime command also uses a read-only filesystem, removes Linux
-capabilities, and prevents the process from gaining additional privileges.
-
-Use the endpoint verification commands from the local development workflow to
-confirm the container is running correctly.
-
-## Kubernetes
-
-The reusable Kubernetes base is adapted for a local `kind` cluster through a
-Kustomize overlay.
-
-### Load the Local Image
-
-```bash
-kind load docker-image golden-path-service:local --name kind
-```
-
-### Deploy the Service
-
-```bash
-kubectl apply -k deploy/kubernetes/overlays/local
-kubectl rollout status deployment/golden-path-service --namespace golden-path
-```
-
-### Inspect the Workload
-
-```bash
-kubectl get pods,service --namespace golden-path
-```
-
-### Access the Service
-
-```bash
-kubectl port-forward --namespace golden-path service/golden-path-service 8081:80
-```
-
-In another terminal, use the endpoint verification commands with
-`http://localhost:8081`.
-
 ## Platform Principles
 
 ### Product-Oriented
@@ -225,6 +118,113 @@ Each capability will be delivered as a small, independently verifiable change.
 ![Vaipex Golden Path delivery flow](docs/images/vaipex-golden-path-delivery-flow.png)
 
 > A developer submits code, the platform verifies and packages it, Kubernetes runs it, and operational feedback shows whether it is working properly.
+
+### Local Development
+
+#### Prerequisites
+
+- Go 1.26 or newer
+
+#### Run the Service
+
+```bash
+go run ./cmd/golden-path-service
+```
+
+The service listens on `http://localhost:8080`.
+
+#### Verify the Endpoints
+
+```bash
+curl http://localhost:8080/
+curl http://localhost:8080/health/live
+curl http://localhost:8080/health/ready
+```
+
+#### Inspect Metrics
+
+```bash
+curl http://localhost:8080/metrics
+```
+
+The metrics endpoint exposes Prometheus-compatible Go runtime and process
+measurements.
+
+#### Run the Tests
+
+```bash
+go test ./...
+```
+
+#### Validate Changes
+
+```bash
+./scripts/validate.sh
+```
+
+The validation command checks Go formatting, runs static analysis, and executes
+the complete test suite.
+
+Press `Ctrl+C` in the service terminal to stop the application.
+
+### Container
+
+#### Build the Image
+
+```bash
+docker build --tag golden-path-service:local .
+```
+
+#### Run the Container
+
+```bash
+docker run --rm \
+  --read-only \
+  --cap-drop=ALL \
+  --security-opt=no-new-privileges \
+  --publish 127.0.0.1:8080:8080 \
+  golden-path-service:local
+```
+
+The runtime image is pinned, minimal, and configured to run as a non-root user.
+The runtime command also uses a read-only filesystem, removes Linux
+capabilities, and prevents the process from gaining additional privileges.
+
+Use the endpoint verification commands from the local development workflow to
+confirm the container is running correctly.
+
+### Kubernetes
+
+The reusable Kubernetes base is adapted for a local
+[kind](https://kind.sigs.k8s.io/) cluster through a Kustomize overlay.
+
+#### Load the Local Image
+
+```bash
+kind load docker-image golden-path-service:local --name kind
+```
+
+#### Deploy the Service
+
+```bash
+kubectl apply -k deploy/kubernetes/overlays/local
+kubectl rollout status deployment/golden-path-service --namespace golden-path
+```
+
+#### Inspect the Workload
+
+```bash
+kubectl get pods,service --namespace golden-path
+```
+
+#### Access the Service
+
+```bash
+kubectl port-forward --namespace golden-path service/golden-path-service 8081:80
+```
+
+In another terminal, use the endpoint verification commands with
+`http://localhost:8081`.
 
 ## Success Criteria
 
