@@ -10,9 +10,15 @@ type serviceResponse struct {
 	Status  string `json:"status"`
 }
 
+type healthResponse struct {
+	Status string `json:"status"`
+}
+
 func NewHandler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", handleServiceInfo)
+	mux.HandleFunc("GET /health/live", handleLiveness)
+	mux.HandleFunc("GET /health/ready", handleReadiness)
 
 	return mux
 }
@@ -25,6 +31,24 @@ func handleServiceInfo(w http.ResponseWriter, _ *http.Request) {
 		Service: "golden-path-service",
 		Status:  "running",
 	}); err != nil {
+		return
+	}
+}
+
+func handleLiveness(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	if err := json.NewEncoder(w).Encode(healthResponse{Status: "alive"}); err != nil {
+		return
+	}
+}
+
+func handleReadiness(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	if err := json.NewEncoder(w).Encode(healthResponse{Status: "ready"}); err != nil {
 		return
 	}
 }
