@@ -107,7 +107,7 @@ Application teams own:
 - [x] Add low-cardinality application request metrics.
 - [x] Add structured request logs.
 - [x] Add Prometheus monitoring foundation and service discovery.
-- [ ] Add a Grafana service dashboard.
+- [ ] Add a Grafana service dashboard and verify it in the local cluster.
 - [ ] Add operational alerts and runbooks.
 - [ ] Add continuous-integration guardrails.
 - [ ] Document customization, governance, and adoption guidance.
@@ -297,6 +297,43 @@ Open `http://localhost:9090` and query:
 up{namespace="golden-path"}
 golden_path_http_requests_total
 ```
+
+### Grafana Service Dashboard
+
+The Grafana sidecar discovers dashboard ConfigMaps labeled
+`grafana_dashboard=1`. The version-controlled service dashboard provides views
+of availability, request rate, HTTP 5xx error rate, in-flight requests, p95
+latency, and response status codes.
+
+#### Install the Dashboard
+
+After installing or upgrading the monitoring stack with the repository values,
+apply the dashboard ConfigMap:
+
+```bash
+kubectl apply -f deploy/monitoring/grafana-dashboard.yaml
+```
+
+#### Access Grafana
+
+```bash
+kubectl port-forward \
+  --namespace monitoring \
+  service/monitoring-grafana \
+  3000:80
+```
+
+Retrieve the generated administrator password:
+
+```bash
+kubectl get secret \
+  --namespace monitoring \
+  monitoring-grafana \
+  --output jsonpath='{.data.admin-password}' | base64 --decode
+```
+
+Open `http://localhost:3000`, sign in as `admin`, and select the
+**Golden Path Service** dashboard.
 
 ## Success Criteria
 
