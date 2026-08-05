@@ -1,7 +1,7 @@
 # Vaipex Golden Path
 
-An open reference implementation for delivering secure, observable, and
-operable Go services on Kubernetes through a consistent developer experience.
+An open reference implementation of a Kubernetes golden path for delivering
+secure, observable, and operable services, demonstrated with Go.
 
 Developed by **Vaipex Labs** for the developer and platform engineering
 community.
