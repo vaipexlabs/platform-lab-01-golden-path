@@ -15,13 +15,14 @@ type healthResponse struct {
 }
 
 func NewHandler() http.Handler {
+	metrics := newHTTPMetrics()
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", handleServiceInfo)
 	mux.HandleFunc("GET /health/live", handleLiveness)
 	mux.HandleFunc("GET /health/ready", handleReadiness)
-	mux.Handle("GET /metrics", newMetricsHandler())
+	mux.Handle("GET /metrics", metrics.handler())
 
-	return mux
+	return metrics.instrument(mux)
 }
 
 func handleServiceInfo(w http.ResponseWriter, _ *http.Request) {

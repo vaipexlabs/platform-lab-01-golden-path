@@ -104,7 +104,8 @@ Application teams own:
 - [x] Create a secure production container.
 - [x] Add a reusable Kubernetes deployment model.
 - [x] Expose Prometheus-compatible runtime and process metrics.
-- [ ] Add application request metrics and structured logs.
+- [x] Add low-cardinality application request metrics.
+- [ ] Add structured request logs.
 - [ ] Add monitoring and operational-readiness defaults.
 - [ ] Add continuous-integration guardrails.
 - [ ] Document customization, governance, and adoption guidance.
@@ -147,8 +148,9 @@ curl http://localhost:8080/health/ready
 curl http://localhost:8080/metrics
 ```
 
-The metrics endpoint exposes Prometheus-compatible Go runtime and process
-measurements.
+The metrics endpoint exposes Prometheus-compatible Go runtime, process, and
+HTTP request measurements. Request metrics use bounded route patterns rather
+than raw URLs to avoid high-cardinality labels.
 
 #### Run the Tests
 

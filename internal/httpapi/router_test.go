@@ -78,10 +78,19 @@ func TestHealthEndpoints(t *testing.T) {
 }
 
 func TestMetrics(t *testing.T) {
-	request := httptest.NewRequest(http.MethodGet, "/metrics", nil)
-	response := httptest.NewRecorder()
+	handler := NewHandler()
 
-	NewHandler().ServeHTTP(response, request)
+	requests := []*http.Request{
+		httptest.NewRequest(http.MethodGet, "/", nil),
+		httptest.NewRequest(http.MethodGet, "/customers/12345", nil),
+	}
+
+	for _, request := range requests {
+		handler.ServeHTTP(httptest.NewRecorder(), request)
+	}
+
+	response := httptest.NewRecorder()
+	handler.ServeHTTP(response, httptest.NewRequest(http.MethodGet, "/metrics", nil))
 
 	if response.Code != http.StatusOK {
 		t.Fatalf("expected status %d, got %d", http.StatusOK, response.Code)
@@ -92,9 +101,22 @@ func TestMetrics(t *testing.T) {
 	}
 
 	body := response.Body.String()
-	for _, metric := range []string{"go_goroutines", "process_cpu_seconds_total"} {
+	expectedMetrics := []string{
+		"go_goroutines",
+		"process_cpu_seconds_total",
+		`golden_path_http_requests_total{method="GET",route="/",status="200"} 1`,
+		`golden_path_http_requests_total{method="GET",route="unmatched",status="404"} 1`,
+		`golden_path_http_request_duration_seconds_count{method="GET",route="/"} 1`,
+		"golden_path_http_requests_in_flight 1",
+	}
+
+	for _, metric := range expectedMetrics {
 		if !strings.Contains(body, metric) {
-			t.Errorf("expected response to contain metric %q", metric)
+			t.Errorf("expected response to contain %q", metric)
 		}
+	}
+
+	if strings.Contains(body, "/customers/12345") {
+		t.Error("expected unmatched requests to avoid raw-path metric labels")
 	}
 }
