@@ -62,6 +62,15 @@ curl http://localhost:8080/health/live
 curl http://localhost:8080/health/ready
 ```
 
+### Inspect Metrics
+
+```bash
+curl http://localhost:8080/metrics
+```
+
+The metrics endpoint exposes Prometheus-compatible Go runtime and process
+measurements.
+
 ### Run the Tests
 
 ```bash
@@ -201,7 +210,9 @@ Application teams own:
 - [x] Add automated code-quality validation.
 - [x] Create a secure production container.
 - [x] Add a reusable Kubernetes deployment model.
-- [ ] Introduce observability and operational-readiness defaults.
+- [x] Expose Prometheus-compatible runtime and process metrics.
+- [ ] Add application request metrics and structured logs.
+- [ ] Add monitoring and operational-readiness defaults.
 - [ ] Add continuous-integration guardrails.
 - [ ] Document customization, governance, and adoption guidance.
 

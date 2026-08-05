@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -73,5 +74,27 @@ func TestHealthEndpoints(t *testing.T) {
 				t.Fatalf("expected response %+v, got %+v", want, got)
 			}
 		})
+	}
+}
+
+func TestMetrics(t *testing.T) {
+	request := httptest.NewRequest(http.MethodGet, "/metrics", nil)
+	response := httptest.NewRecorder()
+
+	NewHandler().ServeHTTP(response, request)
+
+	if response.Code != http.StatusOK {
+		t.Fatalf("expected status %d, got %d", http.StatusOK, response.Code)
+	}
+
+	if contentType := response.Header().Get("Content-Type"); !strings.HasPrefix(contentType, "text/plain") {
+		t.Fatalf("expected Prometheus text content, got %q", contentType)
+	}
+
+	body := response.Body.String()
+	for _, metric := range []string{"go_goroutines", "process_cpu_seconds_total"} {
+		if !strings.Contains(body, metric) {
+			t.Errorf("expected response to contain metric %q", metric)
+		}
 	}
 }

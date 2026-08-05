@@ -19,6 +19,7 @@ func NewHandler() http.Handler {
 	mux.HandleFunc("GET /{$}", handleServiceInfo)
 	mux.HandleFunc("GET /health/live", handleLiveness)
 	mux.HandleFunc("GET /health/ready", handleReadiness)
+	mux.Handle("GET /metrics", newMetricsHandler())
 
 	return mux
 }
