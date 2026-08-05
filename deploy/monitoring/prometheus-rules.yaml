@@ -1,0 +1,64 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: golden-path-service
+  namespace: golden-path
+  labels:
+    app.kubernetes.io/name: golden-path-service
+    monitoring.vaipex.io/enabled: "true"
+spec:
+  groups:
+    - name: golden-path-service.availability
+      rules:
+        - alert: GoldenPathServiceTargetDown
+          expr: |
+            absent(up{namespace="golden-path", service="golden-path-service"}) == 1
+            or
+            min(up{namespace="golden-path", service="golden-path-service"}) < 1
+          for: 2m
+          labels:
+            severity: critical
+            owner: vaipex-labs
+          annotations:
+            summary: Golden Path service target is unavailable
+            description: Prometheus cannot successfully scrape one or more Golden Path service targets for at least two minutes.
+            runbook_url: https://github.com/vaipexlabs/platform-lab-01-golden-path/blob/main/docs/runbooks/golden-path-service-alerts.md#goldenpathservicetargetdown
+
+    - name: golden-path-service.reliability
+      rules:
+        - alert: GoldenPathServiceHighErrorRate
+          expr: |
+            (
+              sum(rate(golden_path_http_requests_total{route!~"/metrics|/health/live|/health/ready", status=~"5.."}[5m]))
+              /
+              sum(rate(golden_path_http_requests_total{route!~"/metrics|/health/live|/health/ready"}[5m]))
+            ) > 0.05
+            and
+            sum(rate(golden_path_http_requests_total{route!~"/metrics|/health/live|/health/ready"}[5m])) > 0.1
+          for: 5m
+          labels:
+            severity: warning
+            owner: vaipex-labs
+          annotations:
+            summary: Golden Path service HTTP 5xx error rate is high
+            description: More than 5% of requests have returned HTTP 5xx responses for at least five minutes.
+            runbook_url: https://github.com/vaipexlabs/platform-lab-01-golden-path/blob/main/docs/runbooks/golden-path-service-alerts.md#goldenpathservicehigherrorrate
+
+        - alert: GoldenPathServiceHighLatency
+          expr: |
+            histogram_quantile(
+              0.95,
+              sum by (le) (
+                rate(golden_path_http_request_duration_seconds_bucket{route!~"/metrics|/health/live|/health/ready"}[5m])
+              )
+            ) > 0.5
+            and
+            sum(rate(golden_path_http_request_duration_seconds_count{route!~"/metrics|/health/live|/health/ready"}[5m])) > 0.1
+          for: 5m
+          labels:
+            severity: warning
+            owner: vaipex-labs
+          annotations:
+            summary: Golden Path service p95 latency is high
+            description: The 95th percentile request latency has exceeded 500 milliseconds for at least five minutes.
+            runbook_url: https://github.com/vaipexlabs/platform-lab-01-golden-path/blob/main/docs/runbooks/golden-path-service-alerts.md#goldenpathservicehighlatency

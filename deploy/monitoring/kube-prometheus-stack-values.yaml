@@ -59,6 +59,11 @@ prometheus:
     podMonitorNamespaceSelector:
       matchLabels:
         monitoring.vaipex.io/enabled: "true"
+    ruleSelectorNilUsesHelmValues: false
+    ruleSelector: {}
+    ruleNamespaceSelector:
+      matchLabels:
+        monitoring.vaipex.io/enabled: "true"
     resources:
       requests:
         cpu: 100m

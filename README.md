@@ -108,7 +108,7 @@ Application teams own:
 - [x] Add structured request logs.
 - [x] Add Prometheus monitoring foundation and service discovery.
 - [x] Add a Grafana service dashboard and verify it in the local cluster.
-- [ ] Add operational alerts and runbooks.
+- [x] Add operational alerts and runbooks.
 - [ ] Add continuous-integration guardrails.
 - [ ] Document customization, governance, and adoption guidance.
 
@@ -334,6 +334,30 @@ kubectl get secret \
 
 Open `http://localhost:3000`, sign in as `admin`, and select the
 **Golden Path Service** dashboard.
+
+### Operational Alerts and Runbooks
+
+Prometheus evaluates service availability, HTTP 5xx error rate, and p95 latency
+rules from monitoring-enabled namespaces. Each alert links to the
+[Golden Path service alert runbook](docs/runbooks/golden-path-service-alerts.md),
+which documents impact, diagnosis, recovery, verification, and escalation.
+
+After installing or upgrading the monitoring stack with the repository values,
+apply the alert rules:
+
+```bash
+kubectl apply -f deploy/monitoring/prometheus-rules.yaml
+```
+
+Inspect the deployed rules:
+
+```bash
+kubectl get prometheusrule --namespace golden-path
+```
+
+Open Prometheus and select **Alerts** to inspect each rule's current state.
+Alertmanager delivery and notification routing are intentionally deferred from
+this local foundation.
 
 ## Success Criteria
 
