@@ -40,6 +40,36 @@ automated guardrails, and documented extension points.
 - Demonstrate platform-as-a-product principles through working software
 - Encourage community discussion around practical platform engineering
 
+## Local Development
+
+### Prerequisites
+
+- Go 1.26 or newer
+
+### Run the Service
+
+```bash
+go run ./cmd/golden-path-service
+```
+
+The service listens on `http://localhost:8080`.
+
+### Verify the Endpoints
+
+```bash
+curl http://localhost:8080/
+curl http://localhost:8080/health/live
+curl http://localhost:8080/health/ready
+```
+
+### Run the Tests
+
+```bash
+go test ./...
+```
+
+Press `Ctrl+C` in the service terminal to stop the application.
+
 ## Platform Principles
 
 ### Product-Oriented
@@ -99,7 +129,7 @@ Application teams own:
 - [x] Establish the Go service foundation and HTTP API.
 - [x] Add liveness and readiness endpoints.
 - [x] Add automated endpoint tests.
-- [ ] Document the supported local developer workflow.
+- [x] Document the supported local developer workflow.
 - [ ] Add automated code-quality validation.
 - [ ] Create a secure production container.
 - [ ] Add a reusable Kubernetes deployment model.
