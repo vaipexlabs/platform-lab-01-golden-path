@@ -107,7 +107,7 @@ Application teams own:
 - [x] Add low-cardinality application request metrics.
 - [x] Add structured request logs.
 - [x] Add Prometheus monitoring foundation and service discovery.
-- [ ] Add a Grafana service dashboard and verify it in the local cluster.
+- [x] Add a Grafana service dashboard and verify it in the local cluster.
 - [ ] Add operational alerts and runbooks.
 - [ ] Add continuous-integration guardrails.
 - [ ] Document customization, governance, and adoption guidance.
