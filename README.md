@@ -96,8 +96,11 @@ Application teams own:
 
 - [x] Define and document the golden path delivery flow.
 - [ ] Define and document the reference architecture.
-- [ ] Establish the service foundation and supported developer workflow.
-- [ ] Add automated testing and quality validation.
+- [x] Establish the Go service foundation and HTTP API.
+- [x] Add liveness and readiness endpoints.
+- [x] Add automated endpoint tests.
+- [ ] Document the supported local developer workflow.
+- [ ] Add automated code-quality validation.
 - [ ] Create a secure production container.
 - [ ] Add a reusable Kubernetes deployment model.
 - [ ] Introduce observability and operational-readiness defaults.
