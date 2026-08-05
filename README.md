@@ -3,6 +3,10 @@
 An open reference implementation of a Kubernetes golden path for delivering
 secure, observable, and operable services, demonstrated with Go.
 
+> A golden path is a supported, reusable route for delivering software that
+> combines sensible defaults, automation, security, observability, and clear
+> ownership while preserving documented customization points.
+
 Developed by **Vaipex Labs** for the developer and platform engineering
 community.
 
@@ -28,6 +32,7 @@ community.
 | I want to… | Start here |
 | --- | --- |
 | See the service working immediately | [Try It in 2 Minutes](#try-it-in-2-minutes) |
+| Understand the problem it addresses | [Why This Project Exists](#why-this-project-exists) |
 | Understand the technical design | [Reference Architecture](#reference-architecture) |
 | Understand the delivery journey | [How the Golden Path Works](#how-the-golden-path-works) |
 | Develop and test locally | [Local Development](#local-development) |
@@ -70,15 +75,16 @@ Expected application responses:
 You now have a tested service exposing health, request, runtime, and process
 telemetry. Press <code>Ctrl+C</code> in the service terminal when finished.
 
-## What Is a Golden Path?
+## Why This Project Exists
 
-A golden path is a supported approach for delivering a common class of
-software. It combines sensible defaults, reusable components, automated
-guardrails, documentation, and operational feedback so teams do not need to
-recreate the same foundation for every service.
+Engineering teams repeatedly rebuild the same service foundations: packaging,
+deployment configuration, health checks, telemetry, security controls, and
+continuous integration. That duplication increases delivery time, creates
+inconsistent standards, and makes support harder.
 
-This project demonstrates how a platform team can provide that experience as a
-product without hiding application ownership or preventing supported
+This project shows how a platform team can provide those shared capabilities as
+a product with a clear developer interface and explicit ownership boundaries,
+without hiding application responsibilities or preventing supported
 customization.
 
 ## Reference Architecture
