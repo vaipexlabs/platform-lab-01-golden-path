@@ -109,7 +109,7 @@ Application teams own:
 - [x] Add Prometheus monitoring foundation and service discovery.
 - [x] Add a Grafana service dashboard and verify it in the local cluster.
 - [x] Add operational alerts and runbooks.
-- [ ] Add continuous-integration guardrails.
+- [ ] Add continuous-integration guardrails and verify them on GitHub.
 - [ ] Document customization, governance, and adoption guidance.
 
 Each capability will be delivered as a small, independently verifiable change.
@@ -358,6 +358,23 @@ kubectl get prometheusrule --namespace golden-path
 Open Prometheus and select **Alerts** to inspect each rule's current state.
 Alertmanager delivery and notification routing are intentionally deferred from
 this local foundation.
+
+### Continuous Integration Guardrails
+
+The GitHub Actions validation workflow runs on pull requests and pushes to
+`main`. Independent jobs validate Go source quality, build the production
+container, render Kubernetes configuration, check Prometheus alert syntax, and
+lint and render the pinned monitoring chart.
+
+The workflow has read-only repository permissions, immutable action references,
+explicit tool versions, job timeouts, and concurrency cancellation. It does not
+publish container images, change GitHub resources, or deploy to a cluster.
+
+Run the primary source checks locally before opening a pull request:
+
+```bash
+./scripts/validate.sh
+```
 
 ## Success Criteria
 
