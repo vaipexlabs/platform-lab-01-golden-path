@@ -68,6 +68,15 @@ curl http://localhost:8080/health/ready
 go test ./...
 ```
 
+### Validate Changes
+
+```bash
+./scripts/validate.sh
+```
+
+The validation command checks Go formatting, runs static analysis, and executes
+the complete test suite.
+
 Press `Ctrl+C` in the service terminal to stop the application.
 
 ## Platform Principles
@@ -130,7 +139,7 @@ Application teams own:
 - [x] Add liveness and readiness endpoints.
 - [x] Add automated endpoint tests.
 - [x] Document the supported local developer workflow.
-- [ ] Add automated code-quality validation.
+- [x] Add automated code-quality validation.
 - [ ] Create a secure production container.
 - [ ] Add a reusable Kubernetes deployment model.
 - [ ] Introduce observability and operational-readiness defaults.
