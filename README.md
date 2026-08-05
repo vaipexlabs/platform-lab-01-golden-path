@@ -79,6 +79,32 @@ the complete test suite.
 
 Press `Ctrl+C` in the service terminal to stop the application.
 
+## Container
+
+### Build the Image
+
+```bash
+docker build --tag golden-path-service:local .
+```
+
+### Run the Container
+
+```bash
+docker run --rm \
+  --read-only \
+  --cap-drop=ALL \
+  --security-opt=no-new-privileges \
+  --publish 127.0.0.1:8080:8080 \
+  golden-path-service:local
+```
+
+The runtime image is pinned, minimal, and configured to run as a non-root user.
+The runtime command also uses a read-only filesystem, removes Linux
+capabilities, and prevents the process from gaining additional privileges.
+
+Use the endpoint verification commands from the local development workflow to
+confirm the container is running correctly.
+
 ## Platform Principles
 
 ### Product-Oriented
@@ -140,7 +166,7 @@ Application teams own:
 - [x] Add automated endpoint tests.
 - [x] Document the supported local developer workflow.
 - [x] Add automated code-quality validation.
-- [ ] Create a secure production container.
+- [x] Create a secure production container.
 - [ ] Add a reusable Kubernetes deployment model.
 - [ ] Introduce observability and operational-readiness defaults.
 - [ ] Add continuous-integration guardrails.
