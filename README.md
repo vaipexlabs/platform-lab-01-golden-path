@@ -106,7 +106,9 @@ Application teams own:
 - [x] Expose Prometheus-compatible runtime and process metrics.
 - [x] Add low-cardinality application request metrics.
 - [x] Add structured request logs.
-- [ ] Add monitoring and operational-readiness defaults.
+- [x] Add Prometheus monitoring foundation and service discovery.
+- [ ] Add a Grafana service dashboard.
+- [ ] Add operational alerts and runbooks.
 - [ ] Add continuous-integration guardrails.
 - [ ] Document customization, governance, and adoption guidance.
 
@@ -234,6 +236,67 @@ kubectl port-forward --namespace golden-path service/golden-path-service 8081:80
 
 In another terminal, use the endpoint verification commands with
 `http://localhost:8081`.
+
+### Monitoring Foundation
+
+The local monitoring foundation uses the pinned `kube-prometheus-stack` Helm
+chart to run Prometheus, the Prometheus Operator, Grafana, kube-state-metrics,
+and node-exporter.
+
+#### Add the Chart Repository
+
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update prometheus-community
+```
+
+#### Install the Monitoring Stack
+
+```bash
+kubectl apply -f deploy/monitoring/namespace.yaml
+kubectl apply -k deploy/kubernetes/overlays/local
+
+helm upgrade --install monitoring \
+  prometheus-community/kube-prometheus-stack \
+  --version 88.1.5 \
+  --namespace monitoring \
+  --values deploy/monitoring/kube-prometheus-stack-values.yaml \
+  --wait \
+  --timeout 5m
+```
+
+#### Enable Service Discovery
+
+```bash
+kubectl apply -f deploy/monitoring/service-monitor.yaml
+```
+
+Prometheus selects ServiceMonitors only from namespaces labeled
+`monitoring.vaipex.io/enabled=true`. The application ServiceMonitor discovers
+both service pods and scrapes `/metrics` every 15 seconds.
+
+#### Inspect the Monitoring Workloads
+
+```bash
+kubectl get pods --namespace monitoring
+kubectl get servicemonitor --all-namespaces
+```
+
+#### Access Prometheus
+
+```bash
+kubectl port-forward \
+  --namespace monitoring \
+  service/monitoring-kube-prometheus-prometheus \
+  9090:9090
+```
+
+Open `http://localhost:9090` and query:
+
+```promql
+up{namespace="golden-path"}
+golden_path_http_requests_total
+```
 
 ## Success Criteria
 

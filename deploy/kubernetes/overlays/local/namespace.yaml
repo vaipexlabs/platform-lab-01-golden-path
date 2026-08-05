@@ -3,6 +3,7 @@ kind: Namespace
 metadata:
   name: golden-path
   labels:
+    monitoring.vaipex.io/enabled: "true"
     pod-security.kubernetes.io/enforce: restricted
     pod-security.kubernetes.io/enforce-version: latest
     pod-security.kubernetes.io/audit: restricted
