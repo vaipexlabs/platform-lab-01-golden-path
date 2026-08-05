@@ -2,6 +2,7 @@ package httpapi
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/http"
 )
 
@@ -14,7 +15,7 @@ type healthResponse struct {
 	Status string `json:"status"`
 }
 
-func NewHandler() http.Handler {
+func NewHandler(logger *slog.Logger) http.Handler {
 	metrics := newHTTPMetrics()
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", handleServiceInfo)
@@ -22,7 +23,7 @@ func NewHandler() http.Handler {
 	mux.HandleFunc("GET /health/ready", handleReadiness)
 	mux.Handle("GET /metrics", metrics.handler())
 
-	return metrics.instrument(mux)
+	return logRequests(logger, metrics.instrument(mux))
 }
 
 func handleServiceInfo(w http.ResponseWriter, _ *http.Request) {

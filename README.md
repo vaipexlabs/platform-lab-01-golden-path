@@ -105,7 +105,7 @@ Application teams own:
 - [x] Add a reusable Kubernetes deployment model.
 - [x] Expose Prometheus-compatible runtime and process metrics.
 - [x] Add low-cardinality application request metrics.
-- [ ] Add structured request logs.
+- [x] Add structured request logs.
 - [ ] Add monitoring and operational-readiness defaults.
 - [ ] Add continuous-integration guardrails.
 - [ ] Document customization, governance, and adoption guidance.
@@ -151,6 +151,13 @@ curl http://localhost:8080/metrics
 The metrics endpoint exposes Prometheus-compatible Go runtime, process, and
 HTTP request measurements. Request metrics use bounded route patterns rather
 than raw URLs to avoid high-cardinality labels.
+
+#### Inspect Structured Logs
+
+The service writes JSON logs to standard output. Request events include the
+HTTP method, bounded route pattern, response status, and duration. Successful
+health probes and metrics scrapes are omitted to reduce operational noise;
+failed operational requests are still logged.
 
 #### Run the Tests
 

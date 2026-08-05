@@ -2,6 +2,8 @@ package httpapi
 
 import (
 	"encoding/json"
+	"io"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -12,7 +14,7 @@ func TestServiceInfo(t *testing.T) {
 	request := httptest.NewRequest(http.MethodGet, "/", nil)
 	response := httptest.NewRecorder()
 
-	NewHandler().ServeHTTP(response, request)
+	newTestHandler().ServeHTTP(response, request)
 
 	if response.Code != http.StatusOK {
 		t.Fatalf("expected status %d, got %d", http.StatusOK, response.Code)
@@ -47,7 +49,7 @@ func TestHealthEndpoints(t *testing.T) {
 		{name: "readiness", path: "/health/ready", status: "ready"},
 	}
 
-	handler := NewHandler()
+	handler := newTestHandler()
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -78,7 +80,7 @@ func TestHealthEndpoints(t *testing.T) {
 }
 
 func TestMetrics(t *testing.T) {
-	handler := NewHandler()
+	handler := newTestHandler()
 
 	requests := []*http.Request{
 		httptest.NewRequest(http.MethodGet, "/", nil),
@@ -119,4 +121,9 @@ func TestMetrics(t *testing.T) {
 	if strings.Contains(body, "/customers/12345") {
 		t.Error("expected unmatched requests to avoid raw-path metric labels")
 	}
+}
+
+func newTestHandler() http.Handler {
+	logger := slog.New(slog.NewJSONHandler(io.Discard, nil))
+	return NewHandler(logger)
 }
