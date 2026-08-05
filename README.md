@@ -109,8 +109,8 @@ Application teams own:
 - [x] Add Prometheus monitoring foundation and service discovery.
 - [x] Add a Grafana service dashboard and verify it in the local cluster.
 - [x] Add operational alerts and runbooks.
-- [ ] Add continuous-integration guardrails and verify them on GitHub.
-- [ ] Document customization, governance, and adoption guidance.
+- [x] Add continuous-integration guardrails and verify them on GitHub.
+- [x] Document customization, governance, and adoption guidance.
 
 Each capability will be delivered as a small, independently verifiable change.
 
@@ -375,6 +375,13 @@ Run the primary source checks locally before opening a pull request:
 ```bash
 ./scripts/validate.sh
 ```
+
+### Adoption, Customization, and Governance
+
+The [Golden Path adoption guide](docs/adoption-guide.md) defines the stable
+platform contract, supported customization points, governance expectations,
+and an incremental adoption approach. It also identifies the additional
+capabilities organizations commonly introduce before production use.
 
 ## Success Criteria
 
