@@ -95,7 +95,7 @@ Application teams own:
 ## Delivery Roadmap
 
 - [x] Define and document the golden path delivery flow.
-- [ ] Define and document the reference architecture.
+- [x] Define and document the reference architecture.
 - [x] Establish the Go service foundation and HTTP API.
 - [x] Add liveness and readiness endpoints.
 - [x] Add automated endpoint tests.
@@ -121,6 +121,15 @@ Each capability will be delivered as a small, independently verifiable change.
 ![Vaipex Golden Path delivery flow](docs/images/vaipex-golden-path-delivery-flow.png)
 
 > A developer submits code, the platform verifies and packages it, Kubernetes runs it, and operational feedback shows whether it is working properly.
+
+### Reference Architecture
+
+![Vaipex Golden Path reference architecture](docs/images/vaipex-golden-path-reference-architecture.png)
+
+The reference architecture separates the developer and source experience,
+application runtime, monitoring control plane, and operational interfaces.
+Solid arrows represent runtime and data flows; dashed arrows represent
+configuration and discovery relationships.
 
 ### Local Development
 
