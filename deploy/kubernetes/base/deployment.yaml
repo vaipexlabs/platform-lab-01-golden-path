@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golden-path-service
+  labels:
+    app.kubernetes.io/name: golden-path-service
+    app.kubernetes.io/part-of: vaipex-golden-path
+    app.kubernetes.io/managed-by: kustomize
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: golden-path-service
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: golden-path-service
+        app.kubernetes.io/part-of: vaipex-golden-path
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: golden-path-service
+          image: ghcr.io/vaipexlabs/golden-path-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            capabilities:
+              drop:
+                - ALL
+      terminationGracePeriodSeconds: 30

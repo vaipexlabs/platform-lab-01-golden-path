@@ -105,6 +105,39 @@ capabilities, and prevents the process from gaining additional privileges.
 Use the endpoint verification commands from the local development workflow to
 confirm the container is running correctly.
 
+## Kubernetes
+
+The reusable Kubernetes base is adapted for a local `kind` cluster through a
+Kustomize overlay.
+
+### Load the Local Image
+
+```bash
+kind load docker-image golden-path-service:local --name kind
+```
+
+### Deploy the Service
+
+```bash
+kubectl apply -k deploy/kubernetes/overlays/local
+kubectl rollout status deployment/golden-path-service --namespace golden-path
+```
+
+### Inspect the Workload
+
+```bash
+kubectl get pods,service --namespace golden-path
+```
+
+### Access the Service
+
+```bash
+kubectl port-forward --namespace golden-path service/golden-path-service 8081:80
+```
+
+In another terminal, use the endpoint verification commands with
+`http://localhost:8081`.
+
 ## Platform Principles
 
 ### Product-Oriented
@@ -167,7 +200,7 @@ Application teams own:
 - [x] Document the supported local developer workflow.
 - [x] Add automated code-quality validation.
 - [x] Create a secure production container.
-- [ ] Add a reusable Kubernetes deployment model.
+- [x] Add a reusable Kubernetes deployment model.
 - [ ] Introduce observability and operational-readiness defaults.
 - [ ] Add continuous-integration guardrails.
 - [ ] Document customization, governance, and adoption guidance.
