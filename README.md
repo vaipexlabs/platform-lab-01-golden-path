@@ -44,6 +44,7 @@ community.
 | Understand the repository | [Repository Structure](#repository-structure) |
 | Customize or adopt the pattern | [Customization and Adoption](#customization-and-adoption) |
 | Understand ownership | [Responsibility Model](#responsibility-model) |
+| Reuse or distribute the project | [License](#license) |
 
 ## Try It in 2 Minutes
 
@@ -525,6 +526,12 @@ Community feedback and contributions are welcome. Before opening a pull request:
 Describe the problem being solved, contract or operational impact, validation
 evidence, and documentation changes. Platform changes should preserve secure
 and observable defaults or document a narrowly scoped exception.
+
+## License
+
+This project is licensed under the [Apache License 2.0](LICENSE).
+
+Copyright 2026 Vaipex Labs.
 
 ## About Vaipex Labs
 
